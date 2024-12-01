@@ -6,6 +6,7 @@
 
 _Static_assert(sizeof(float)==sizeof(unsigned int), "Architecture error");
 _Static_assert(sizeof(double)==sizeof(unsigned long long int), "Architeture error double/long int");
+_Static_assert(sizeof(long double)==2*sizeof(unsigned long long int), "Architeture error long double/long int");
 
 bool isNumeric(const char *value)
 {
@@ -25,7 +26,7 @@ bool isNumeric(const char *value)
     return false;
 
   bool scientifcNotationOccur = false;
-  bool occur = false;
+  bool dotOccur = false;
 
 part2:
 
@@ -36,8 +37,8 @@ part2:
   do {
     if (c < '0') {
       if (c == '.')
-        if (!occur) {
-          occur = true;
+        if (!dotOccur) {
+          dotOccur = true;
           continue;
         }
 
@@ -72,6 +73,11 @@ int main(int argc, char **argv)
         float f;
         unsigned long long int l;
         double d;
+        struct long_double_part_t {
+          long long unsigned int p1;
+          unsigned short int p2;
+        } long_double_part;
+        long double ld;
     } value;
 
 #define VALUE_U_SZ sizeof(union value_u)
@@ -93,15 +99,21 @@ int main(int argc, char **argv)
 
     memset(&value, 0, VALUE_U_SZ);
 
+    value.ld=strtold(num_arg, NULL);
+
+    printf("\nValue LONG DOUBLE = %16.016Lf -> 0x%04X%016llX\n", value.ld, value.long_double_part.p2, value.long_double_part.p1);
+
+    memset(&value, 0, VALUE_U_SZ);
+
     value.d=strtod(num_arg, NULL);
 
-    printf("\nValue DOUBLE = %lf -> 0x%016llX\n", value.d, value.l);
+    printf("\nValue DOUBLE = %16.016lf -> 0x%016llX\n", value.d, value.l);
 
     memset(&value, 0, VALUE_U_SZ);
 
     value.f=strtof(num_arg, NULL);
 
-    printf("\nValue FLOAT = %lf -> 0x%08X\n", value.f, value.i);
+    printf("\nValue FLOAT = %16.016f -> 0x%08X\n", value.f, value.i);
 
     return 0;
 }
