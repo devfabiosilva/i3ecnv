@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     num_arg=(const char *)argv[1];
 
     if (!isNumeric(num_arg)) {
-      printf("\n%s is not a number\n", num_arg);
+      printf("\n\"%s\" is not a number\n", num_arg);
       return -2;
     }
 
